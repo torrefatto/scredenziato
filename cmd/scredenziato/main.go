@@ -11,10 +11,13 @@ const progName = "scredenziato"
 
 var Version = "dev"
 var subCmds = map[string]func(args ...string) error{
-	"list": listCmd,
-	//"get":     getCmd,
-	//"help":    helpCmd,
+	"list":    listCmd,
+	"get":     getCmd,
 	"version": versionCmd,
+}
+
+func init() {
+	subCmds["help"] = helpCmd
 }
 
 func usage() {
@@ -79,7 +82,53 @@ func formatList(list map[string]string, onlyServerURL bool) {
 	}
 }
 
+func getCmd(args ...string) error {
+	var noUsername, noSecret bool
+	flagset := flag.NewFlagSet("get", flag.ExitOnError)
+	flagset.BoolVar(&noUsername, "no-username", false, "Omit the username from the return value")
+	flagset.BoolVar(&noSecret, "no-secret", false, "Omit the secret from the return value")
+	flagset.Usage = func() {
+		fmt.Println("get <server-url>")
+		fmt.Println("Given a server url, returns the associated username and/or password")
+		flagset.PrintDefaults()
+	}
+
+	if err := flagset.Parse(args); err != nil {
+		return err
+	}
+
+	if flagset.NArg() != 1 {
+		flagset.Usage()
+		return fmt.Errorf("get: wrong syntax")
+	}
+
+	helper, err := getHelper()
+	if err != nil {
+		return err
+	}
+
+	user, secret, err := helper.Get(flagset.Arg(0))
+	if err != nil {
+		return err
+	}
+
+	if !noUsername {
+		fmt.Println(user)
+	}
+
+	if !noSecret {
+		fmt.Println(secret)
+	}
+
+	return nil
+}
+
 func versionCmd(...string) error {
 	fmt.Printf("%s version: %s\n", progName, Version)
+	return nil
+}
+
+func helpCmd(...string) error {
+	usage()
 	return nil
 }
