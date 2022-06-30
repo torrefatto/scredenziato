@@ -69,17 +69,9 @@ type FileBased struct {
 }
 
 func NewFileBasedStore() (credentials.Helper, error) {
-	var path string
-
-	env := os.Getenv("DOCKER_CONFIG")
-	if env != "" {
-		path = env
-	} else {
-		home, err := homedir.Dir()
-		if err != nil {
-			return nil, err
-		}
-		path = filepath.Join(home, ".docker", "config.json")
+	path, err := GetConfPath()
+	if err != nil {
+		return nil, err
 	}
 
 	return newFileBasedStore(path)
@@ -231,4 +223,21 @@ func writeData(path string, data map[string]interface{}) error {
 	}
 
 	return ioutil.WriteFile(path, out, 0600)
+}
+
+func GetConfPath() (string, error) {
+	var path string
+
+	env := os.Getenv("DOCKER_CONFIG")
+	if env != "" {
+		path = env
+	} else {
+		home, err := homedir.Dir()
+		if err != nil {
+			return "", err
+		}
+		path = filepath.Join(home, ".docker", "config.json")
+	}
+
+	return path, nil
 }
