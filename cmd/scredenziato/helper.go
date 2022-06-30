@@ -27,7 +27,7 @@ func getHelperFromFile() credentials.Helper {
 		return nil
 	}
 
-	if credStore, ok := config["credStore"].(string); ok {
+	if credStore, ok := config["credsStore"].(string); ok {
 		return tryOsSpecificHelpers(credStore)
 	} else {
 		if _, ok := config["auths"].(map[string]interface{}); ok {
