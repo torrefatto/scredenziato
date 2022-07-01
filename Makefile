@@ -6,9 +6,12 @@ word-find = $(word $2,$(subst -, ,$1))
 	mkdir bin
 
 scredenziato-%: ./bin
+	CGO_ENABLED=1 \
 	GOOS=$(call word-find,$*,1) \
 	GOARCH=$(call word-find,$*,2) \
-	$(GO) build -ldflags="-X main.Version=$$(git rev-parse HEAD)" -o bin/$@ ./cmd/scredenziato/...
+	CC=$${CC_$(call word-find,$*,1)_$(call word-find,$*,2):-$$(which cc)} \
+	CXX=$${CXX_$(call word-find,$*,1)_$(call word-find,$*,2):-$$(which c++)} \
+	$(GO) build -v -ldflags="-X main.Version=$$(git rev-parse HEAD)" -o bin/$@ ./cmd/scredenziato/...
 
 build:
 	make scredenziato-linux-amd64
