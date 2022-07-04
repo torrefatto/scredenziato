@@ -128,7 +128,15 @@ func versionCmd(...string) error {
 	return nil
 }
 
-func helpCmd(...string) error {
+func helpCmd(arg ...string) error {
+	if len(arg) > 0 {
+		switch arg[0] {
+		case "list":
+			listCmd("-h")
+		case "get":
+			getCmd("-h")
+		}
+	}
 	usage()
 	return nil
 }
