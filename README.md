@@ -50,5 +50,12 @@ CXX_windows_amd64=/path/to/x86_64-w64-mingw32-g++ \
 make build
 ```
 
+To facilitate this process, I included a [`Dockerfile`](./Dockerfile) that matches my
+development environment. To build it, simply run
+
+```
+$ make build-with-docker
+```
+
 [d]: https://github.com/docker/docker-credential-helpers
 [o]: https://github.com/tpoechtrager/osxcross
