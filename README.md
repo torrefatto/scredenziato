@@ -15,11 +15,11 @@ to a registry in an authenticated way. If found, one can then query such store.
 ### Examples
 
 ```
-$ screanzato list
+$ scredenziato list
 registry1.example.org	user1
 registry2.example.com	user2
 
-$ screanzato get registry1.example.org
+$ scredenziato get registry1.example.org
 user1
 THE_SUPER_SECRET_PASSPHRASE
 ```
