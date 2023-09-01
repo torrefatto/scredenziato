@@ -9,7 +9,8 @@ RUN groupadd -g ${gid} callidus \
 RUN if [ "z$USE_FLEXO_CACHE" != "z" ]; then \
         echo "Server = http://$(ip r | grep default | awk '{print $3}'):7878/\$repo/os/\$arch" > /etc/pacman.d/mirrorlist; \
     fi; \
-    pacman -Sy --noconfirm \
+    pacman -Syyu --noconfirm \
+ && pacman -Sy --noconfirm \
     python \
     make \
     git \
@@ -27,8 +28,8 @@ RUN if [ "z$USE_FLEXO_CACHE" != "z" ]; then \
 USER servus
 WORKDIR /domus
 
-RUN git clone https://github.com/tpoechtrager/osxcross
-COPY ./docker/osxcross_data/ osxcross/tarballs/
+RUN git clone https://github.com/tpoechtrager/osxcross \
+ && curl -L --output osxcross/tarballs/MacOSX13.3.sdk.tar.xz https://github.com/joseluisq/macosx-sdks/releases/download/13.3/MacOSX13.3.sdk.tar.xz
 RUN cd osxcross \
  && UNATTENDED=1 ./build.sh
 RUN mkdir scredenziato
@@ -36,8 +37,8 @@ COPY . scredenziato
 
 ENV CC_darwin_amd64=/domus/osxcross/target/bin/o64-clang
 ENV CXX_darwin_amd64=/domus/osxcross/target/bin/o64-clang++
-ENV CC_darwin_arm64=/domus/osxcross/target/bin/aarch64-apple-darwin21.4-clang
-ENV CXX_darwin_arm64=/domus/osxcross/target/bin/aarch64-apple-darwin21.4-clang++
+ENV CC_darwin_arm64=/domus/osxcross/target/bin/aarch64-apple-darwin22.4-clang
+ENV CXX_darwin_arm64=/domus/osxcross/target/bin/aarch64-apple-darwin22.4-clang++
 ENV CC_windows_amd64=/usr/bin/x86_64-w64-mingw32-gcc
 ENV CXX_windows_amd64=/usr/bin/x86_64-w64-mingw32-g++
 ENV PATH=$PATH:/domus/osxcross/target/bin

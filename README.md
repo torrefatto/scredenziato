@@ -41,10 +41,11 @@ and follow the steps in the readme) and a windows cross compiler (mingw is the c
 archlinux). You can build all the targets with
 
 ```
+$ export DARWIN_VERSION=22.4
 $ CC_darwin_amd64=/path/to/o64-clang \
 CXX_darwin_amd64=/path/to/o64-clang++ \
-CC_darwin_arm64=/path/to/aarch64-apple-darwin21.4-clang \
-CXX_darwin_arm64=/path/to/aarch64-apple-darwin21.4-clang++ \
+CC_darwin_arm64=/path/to/aarch64-apple-darwin${DARWIN_VERSION}-clang \
+CXX_darwin_arm64=/path/to/aarch64-apple-darwin${DARWIN_VERSION}-clang++ \
 CC_windows_amd64=/path/to/x86_64-w64-mingw32-gcc \
 CXX_windows_amd64=/path/to/x86_64-w64-mingw32-g++ \
 make build
